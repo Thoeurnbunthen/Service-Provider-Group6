@@ -27,6 +27,7 @@ import com.smart.service.service.AuthenticationService;
 import com.smart.service.service.JwtService;
 import jakarta.transaction.Transactional;
 
+// This is the service implement
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
