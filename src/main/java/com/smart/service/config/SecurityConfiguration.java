@@ -36,9 +36,12 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/api/v1/auth-service/register",
                                 "/api/v1/auth-service/authenticate",
-                                "/instances"
-//                                "/api/v1/reviews/*",
-//                                "/api/v1/properties"
+                                "/instances",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**"
                         ).permitAll()
 
                         .requestMatchers("/api/v1/auth-service/assign-role").authenticated()
