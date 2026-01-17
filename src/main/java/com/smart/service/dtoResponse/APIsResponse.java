@@ -14,38 +14,26 @@ import lombok.Setter;
 public class APIsResponse<T> {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("Message")
     private String message;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("StatusCode")
     private Integer statusCode;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("Date")
-    private T date;
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("accessToken")
-    private String accessToken;
-
     private T data;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("ListData")
-
-
     private List<T> listData;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
 
-    @JsonProperty("refreshToken")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String accessToken;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String refreshToken;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("role")
     private List<String> role;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("userId")
     private Long userId;
 }

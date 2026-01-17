@@ -23,16 +23,16 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
 
-    public AuthenticationController(AuthenticationService authenticationService, UserRepository userReposiitory) {
+    public AuthenticationController(AuthenticationService authenticationService, UserRepository userRepository) {
         this.authenticationService = authenticationService;
-        this.userRepository = userReposiitory;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/register")
     public ResponseEntity<APIsResponse<?>> register(@RequestBody RegisterUserRequest registerDto) {
         // ✅ Check duplicate email → throw BadRequestException (400)
         if (userRepository.existsByEmail(registerDto.getEmail())) {
-            throw new BadRequestException("User with email already exists"); // <<< NEW LINE
+            throw new BadRequestException("User with email already exists");
         }
 
         // ✅ Call service normally, no try/catch needed
@@ -49,7 +49,6 @@ public class AuthenticationController {
     }
 
 
-    @SuppressWarnings("rawtypes")
     @PostMapping("/authenticate")
     public ResponseEntity<APIsResponse<?>> authenticate(@RequestBody AuthenticationRequest request) {
         // ✅ service will throw UnauthorizedException for invalid credentials

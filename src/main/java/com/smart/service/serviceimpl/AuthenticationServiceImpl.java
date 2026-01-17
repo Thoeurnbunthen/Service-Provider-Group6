@@ -49,7 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public APIsResponse<UserEntity> register(RegisterUserRequest registerDto) {
         // 1. Check duplicate email
         if (userRepository.existsByEmail(registerDto.getEmail())) {
-            throw new BadRequestException("User with email already exists"); // <<< NEW
+            throw new BadRequestException("User with this email already exists"); // <<< NEW
         }
 
         // 2. Build user
@@ -63,14 +63,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .roles(new HashSet<>())
                 .build();
 
-        // 3. Assign roles
+        // 3.  Assign DEFAULT role
         RoleEntity userRole = roleRepository.findByName(enums.USER);
         if (userRole != null) user.getRoles().add(userRole);
-
-        if ("AGENT".equalsIgnoreCase(registerDto.getRole())) {
-            RoleEntity agentRole = roleRepository.findByName(enums.PROVIDER);
-            if (agentRole != null) user.getRoles().add(agentRole);
-        }
 
         userRepository.save(user);
 
@@ -88,13 +83,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     public APIsResponse<UserEntity> assignRoleToUser(RoleAssignRequest request) {
         UserEntity user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found")); // <<< UPDATED
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         RoleEntity role = roleRepository.findById(request.getRoleId())
-                .orElseThrow(() -> new ResourceNotFoundException("Role not found")); // <<< UPDATED
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
 
         if (user.getRoles().contains(role)) {
-            throw new BadRequestException("User already has this role assigned"); // <<< NEW
+            throw new BadRequestException("User already has this role assigned");
         }
 
         user.getRoles().add(role);
@@ -116,7 +111,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public APIsResponse<AuthenticationResponse> authenticate(AuthenticationRequest authenticationRequest) {
 
         try {
-            // ✅ Authenticate with Spring Security
+            // Authenticate with Spring Security
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             authenticationRequest.getEmail(),
@@ -124,26 +119,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     )
             );
         } catch (Exception ex) {
-            // <<< NEW: If authentication fails, throw custom exception
+            // If authentication fails, throw custom exception
             throw new UnauthorizedException("Invalid email or password"); // 401
         }
 
-        // ✅ Find user by email
+        // Find user by email
         UserEntity user = userRepository.findByEmail(authenticationRequest.getEmail());
         if (user == null) {
-            throw new UnauthorizedException("Invalid email or password"); // <<< NEW
+            throw new UnauthorizedException("Invalid email or password");
         }
 
-        // ✅ Generate JWT tokens
+        //  Generate JWT tokens
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefresh(user);
 
-        // ✅ Map roles to list of strings
+        // Map roles to list of strings
         List<String> rolesList = user.getRoles().stream()
                 .map(r -> r.getName().name())
                 .collect(Collectors.toList());
 
-        // ✅ Build AuthenticationResponse
+        // Build AuthenticationResponse
         AuthenticationResponse response = AuthenticationResponse.builder()
                 .userId(user.getId())
                 .gender(user.getGender())
@@ -153,7 +148,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .refreshToken(refreshToken)
                 .build();
 
-        // ✅ Wrap in APIsResponse
+        // Wrap in APIsResponse
         return APIsResponse.<AuthenticationResponse>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Login successfully")
