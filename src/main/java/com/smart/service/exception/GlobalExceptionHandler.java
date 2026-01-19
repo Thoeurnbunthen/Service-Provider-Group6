@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import lombok.Builder;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.springframework.security.access.AccessDeniedException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -28,10 +32,21 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ErrorResponse> handleForbidden(ForbiddenException ex) {
-        return buildErrorResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    public ResponseEntity<Map<String, Object>> handleForbidden(ForbiddenException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", 403);
+        body.put("message", ex.getMessage());
+        body.put("timestamp", System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
     }
-
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", 403);
+        body.put("message", "You are not allowed to perform this action");
+        body.put("timestamp", System.currentTimeMillis());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
         // Get the first field error (you can also collect all if you want)

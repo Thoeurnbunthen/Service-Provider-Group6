@@ -3,6 +3,7 @@ package com.smart.service.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
@@ -21,5 +22,9 @@ public class CategoryEntity {
     private Long id;
     private String name;
     private String description;
+    @ManyToOne(fetch = FetchType.LAZY) // One ADMIN user can create many categories
+    @JoinColumn(name = "user_id", nullable = false) // Each category belongs to one user
+    @JsonIgnore   // IMPORTANT to avoid serialization loop
+    private UserEntity users;
 
 }

@@ -9,9 +9,10 @@ public interface CategoryService {
 
     List<CategoryService> getAllCategories();
     CategoryEntity getCategoryById (Long categoryId);
-    CategoryEntity createCategory(CategoryRequest categoryRequest);
 
-    CategoryEntity createCategory(CategoryEntity categoryEntity);
+
+    CategoryEntity createCategory(CategoryRequest request, String email);
+
 
     CategoryEntity updateCategory (CategoryEntity categoryEntity);
     void deleteCategory (Long categoryId);
