@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -29,6 +26,17 @@ public class CategoryController {
         CategoryEntity createdCategory = categoryService.createCategory(categoryRequest, principal.getName());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
+    }
+
+    @PutMapping("/categories/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoryEntity> update(
+            @PathVariable("id") Long categoryId,
+            @RequestBody CategoryRequest categoryRequest,
+            Principal principal) {
+
+        CategoryEntity updatedCategory = categoryService.updateCategory(categoryId, categoryRequest, principal.getName());
+        return ResponseEntity.ok(updatedCategory);
     }
 
 

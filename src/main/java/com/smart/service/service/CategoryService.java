@@ -14,6 +14,7 @@ public interface CategoryService {
     CategoryEntity createCategory(CategoryRequest request, String email);
 
 
-    CategoryEntity updateCategory (CategoryEntity categoryEntity);
+    CategoryEntity updateCategory(Long categoryId, CategoryRequest request, String email);
+
     void deleteCategory (Long categoryId);
 }
