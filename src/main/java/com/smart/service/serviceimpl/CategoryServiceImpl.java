@@ -64,9 +64,31 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public CategoryEntity updateCategory(CategoryEntity categoryEntity) {
-        return null;
+    public CategoryEntity updateCategory(Long categoryId, CategoryRequest request, String email) {
+
+        // Find the user making the request
+        UserEntity users = userRepository.findByEmail(email);
+
+        // Check if the user is ADMIN
+        boolean isAdmin = users.getRoles().stream()
+                .anyMatch(role -> role.getName() == enums.ADMIN);
+
+        if (!isAdmin) {
+            throw new ForbiddenException("You are not allowed to update this category");
+        }
+
+        // Find the category to update
+        CategoryEntity category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+
+        // Update fields
+        category.setName(request.getName());
+        category.setDescription(request.getDescription());
+
+        // Save changes
+        return categoryRepository.save(category);
     }
+
 
     @Override
     public void deleteCategory(Long categoryId) {
