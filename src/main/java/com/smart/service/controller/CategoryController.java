@@ -5,13 +5,15 @@ import com.smart.service.dtoRequest.CategoryRequest;
 import com.smart.service.entity.CategoryEntity;
 import com.smart.service.service.CategoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -39,5 +41,24 @@ public class CategoryController {
         return ResponseEntity.ok(updatedCategory);
     }
 
+      @GetMapping("/categories")
+      public ResponseEntity<List<CategoryEntity>> getAllCategories() {
+        return ResponseEntity.ok(categoryService.getAllCategories());
+          
+      }
+      
+      @DeleteMapping("/categories/{id}")
+      public ResponseEntity<Map<String, Object>> deleteCategory(
+              @PathVariable("id") Long categoryId,
+              Principal principal) {
+
+          categoryService.deleteCategory(categoryId, principal.getName());
+
+          Map<String, Object> response = new HashMap<>();
+          response.put("statue",  "success");
+          response.put("message", "Category deleted successfully");
+          response.put("timestamp",  System.currentTimeMillis());
+          return ResponseEntity.ok(response);
+      }
 
 }
