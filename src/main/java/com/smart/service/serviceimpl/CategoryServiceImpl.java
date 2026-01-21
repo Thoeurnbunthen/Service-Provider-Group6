@@ -26,13 +26,15 @@ public class CategoryServiceImpl implements CategoryService {
 
 
     @Override
-    public List<CategoryService> getAllCategories() {
-        return List.of();
+    public List<CategoryEntity> getAllCategories() {
+        return categoryRepository.findAll();
     }
 
     @Override
     public CategoryEntity getCategoryById(Long categoryId) {
-        return null;
+
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
     }
 
 
@@ -89,9 +91,19 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.save(category);
     }
 
-
     @Override
-    public void deleteCategory(Long categoryId) {
+    public void deleteCategory(Long categoryId, String email) {
+         
+        // Check if the user is ADMIN
+        UserEntity users = userRepository.findByEmail(email);
 
+        boolean isAdmin = users.getRoles().stream()
+                .anyMatch(role -> role.getName() == enums.ADMIN);
+
+        if (!isAdmin) {
+            throw new ForbiddenException("You are not allowed to delete this category");
+        }
+
+       categoryRepository.deleteById(categoryId);
     }
 }
