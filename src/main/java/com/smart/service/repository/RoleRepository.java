@@ -6,6 +6,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import com.smart.service.entity.RoleEntity;
 
+import java.util.Optional;
+
 @Repository
 public interface RoleRepository extends CrudRepository<RoleEntity, Long> {
-    RoleEntity findByName(enums name);}
+    RoleEntity findByName(enums name);
+
+
+
+
+}
