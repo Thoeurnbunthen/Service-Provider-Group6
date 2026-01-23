@@ -16,15 +16,21 @@ import lombok.NoArgsConstructor;
 @Table(name = "categories")
 @Data @NoArgsConstructor @AllArgsConstructor
 public class CategoryEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
+
     private String name;
     private String description;
-    @ManyToOne(fetch = FetchType.LAZY) // One ADMIN user can create many categories
-    @JoinColumn(name = "user_id", nullable = false) // Each category belongs to one user
-    @JsonIgnore   // IMPORTANT to avoid serialization loop
-    private UserEntity users;
 
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<ServiceEntity> services = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
+    private UserEntity users;
 }
+
