@@ -47,7 +47,10 @@ public class UserEntity implements UserDetails {
     private String gender;
     private String status; // e.g., "ACTIVE", "INACTIVE"
 
-    // Many-to-Many relationship with the 'role' table via 'user_role' join table
+
+    @OneToMany(mappedBy = "user") // matches "private UserEntity user" in ServiceEntity
+    @JsonIgnore
+    private List<ServiceEntity> services;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",

@@ -12,7 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/provider-requests")
+@RequestMapping("/api/v1/provider-requests")
 @RequiredArgsConstructor
 public class ProviderRequestController {
     private final ProviderRequestService requestService;
