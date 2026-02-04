@@ -1,7 +1,6 @@
 package com.smart.service.mapper;
 
 import com.smart.service.dtoResponse.ServiceResponse;
-import com.smart.service.dtoResponse.ServicesImageDTO;
 import com.smart.service.entity.ServiceEntity;
 import com.smart.service.entity.ServicesImageEntity;
 import org.mapstruct.Mapper;

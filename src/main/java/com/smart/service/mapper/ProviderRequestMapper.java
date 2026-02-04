@@ -1,26 +1,18 @@
 package com.smart.service.mapper;
-
 import com.smart.service.dtoResponse.ProviderRequestResponse;
 import com.smart.service.entity.ProviderRequestEntity;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class ProviderRequestMapper {
+@Mapper(componentModel = "spring")
+public interface ProviderRequestMapper {
 
-    public ProviderRequestResponse toResponse(ProviderRequestEntity entity) {
-        return ProviderRequestResponse.builder()
-                .id(entity.getId())
-                .userId(entity.getUser().getId())
-                .businessName(entity.getBusinessName())
-                .businessBio(entity.getBusinessBio())
-                .status(entity.getStatus().name())
-                .adminNote(entity.getAdminNote())
-                .createdAt(entity.getCreatedAt())
-                .build();
+    @Mapping(source = "user.id", target = "userId")
+    @Mapping(source = "status", target = "status")
+    ProviderRequestResponse toResponse (ProviderRequestEntity entity);
+    // Enum -> String conversion
+
+    default String mapStatusToString(Enum<?> status) {
+        return status != null ? status.name() : null;
     }
-
-
-
-
-
 }
